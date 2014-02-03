@@ -32,3 +32,8 @@ STRING="to be or not to be"
 echo ${STRING[@]/be/eat}        # to eat or not to be
 ############################################
 echo
+
+for i in 1 2 3 "hello" 5
+do
+  echo $i
+done
