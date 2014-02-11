@@ -1,4 +1,4 @@
-#!/bin/sh -l
+#!/bin/bash -l
 #
 # command line arguments
 # first argument to this script file is the code-generation parameters.

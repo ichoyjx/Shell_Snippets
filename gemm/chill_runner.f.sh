@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This is the general process of using CHiLL
 scc -V -.spd gemm.f
 porky -forward-prop gemm.spd gemm.sp1

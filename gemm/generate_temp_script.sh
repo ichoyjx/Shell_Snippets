@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # generate a new CHiLL script using the transformation parameters
 # this script gets the code transformation parameters as an argument.
