@@ -1,0 +1,15 @@
+1. based on the MM (or Jacobi) code, generate appropriate parameters for transforming
+
+   permute: 3 1 2
+    unroll: 6
+    tiling: 4
+
+2. for each parameter, generate a new recipe
+
+   temp.script
+
+3. suif.py or shell script to compile and get the transformed code
+
+   mm.modified.f
+
+4. use OpenUH to compile and execute the code and get the performance
