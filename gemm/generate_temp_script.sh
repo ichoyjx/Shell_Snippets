@@ -42,5 +42,5 @@ echo "
     unroll(0,4,UI)
     unroll(0,5,UJ)
    
-    " > temp.script; 
+    " > gemm.script; 
 
