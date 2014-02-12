@@ -1,4 +1,4 @@
-      FUNCTION gemm(N,A,B,C)
+      FUNCTION MM(N,A,B,C)
       INTEGER N
       REAL*8  A(N,N), B(N,N), C(N,N)
       
@@ -12,7 +12,7 @@
  20      CONTINUE
  10   CONTINUE
 
-      gemm = 0
+      MM = 0
       RETURN
 
       END
