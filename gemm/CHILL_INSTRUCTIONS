@@ -1,0 +1,224 @@
+This directory includes some examples of using CHiLL scripts.
+
+File types:
+===========
+*.script: script file
+*.f: source fortran file
+*.sp2: SUIF intermediate code (this suffix is arbitrary)
+*.lxf: transformed SUIF intermediate code after running the script
+
+
+Apply loop transformations:
+===========================
+
+> chill <whatever.script>
+The transformed file is <whatever.lxf>, assuming <whatever.sp2> is
+the source file described in the script. WARNING: output suif file
+will be overwritten if it already exists.
+
+
+SUIF usage:
+===========
+
+Convert SUIF intermediate code to Fortran source code:
+> s2f <suif_file.lxf> > <whatever.f>
+This command is only available in our gcc-fixed suif. The
+resulting <whatever.f> can be compiled with native compiler of
+choice. If you are using original suif, please copy s2f and
+reformatfortran from our version. Use s2c for C source code,
+available in original suif.
+
+Convert Fortran file (Fortran 77) to SUIF intermediate code:
+> scc -V -.spd <source.f>
+> porky -forward-prop <source.spd> <source.sp1>
+> porky -dead-code <source.sp1> <source.sp2>
+The resulting <source.sp2> can then be read by chill.
+
+
+A VERY brief walkthrough of CHiLL script commands:
+==================================================
+
+The first transformation must be original or permute or nonsignular, which
+establishes the initial iteration space in the order desired.
+
+Parameter numbering scheme:
+- statement number starts from 0 and for the same statement, it won't
+  change across transformations.
+- loop level starts from 1 and this number might change depending on the
+semantics of the transformation, e.g., if a new tile controlling loop
+is inserted outside loop level x, this loop will then be referenced by
+loop level x+1 in the following script.
+- array dimensions starts from 0.
+
+If the first parameter is a single statement number, then the intended
+transformation works on all the statements enclosed in the subloop
+specified by this statement number and loop level.  If the first
+parameter is a set of statement numbers, then the intended transformation
+works on these statements only.  All following transformation commands
+use xform(parm1, parm2,...) format each in a separate line.
+
+NAME           PARAMETER LIST
+----------     ----------------------------------
+permute        stmt#
+               loop level
+               [loop order vector]
+                 interchange the sub loop nest to the new loop order
+permute        [loop order vector]
+                 shortcut to "permute(0,0,[loop order vector])",
+                 i.e., permute complete loop nest
+original       N/A
+                 shortcut to "permute([1,2,3,...])",i.e. original loop order
+unroll         stmt#
+               loop level to unroll
+               unroll amount
+                 = 0 means fully unroll the loop if the number of iterations
+                     can be determined statically, otherwise no unrolling
+                 = 1 means no unrolling
+                 = d means loop body unrolled d times and then fused together
+                     if it is legal
+               cleanup code splitted at loop level
+                 (default to unroll loop level)
+unroll_extra   stmt#
+               loop level to unroll
+               unroll_amount
+                 same as unroll except the cleanup loop is fully unrolled
+                 whenever possible
+               cleanup code splitted at loop level
+                 (default to unroll loop level)
+tile           stmt#
+               loop level to tile
+               tile size
+                 = 0 means no tiling
+                 = 1 similar to loop interchange
+                 = d tiling with tile/block size d
+               tile controlling loop level (default = 1, i.e. outermost loop)
+               tile controlling loop iteration method
+                 = strided (default) means each tile is reference by its
+                           starting boundary
+                 = counted means each tile is referenced by n-th counting
+                           from 0 and up
+               tile boundary alignment offset (default = 0, >= 0)
+               tile boundary alignment multiple (default = 1, >= 1)
+                 align the starting point of the very first tile to
+                 be the closest designated multiples right below
+                 (original_lb - offset)
+split          stmt#
+               loop level to split
+               expression
+                 in which L<n> has special meaning of loop level n,
+                 only one expression is allowed, i.e no logical and/or of
+                 multiple formulas
+datacopy       stmt#
+               loop level
+                 inside which data footprint is copied and put right before
+                 this loop
+               array name
+                 all array accesses in the subloop with this array name
+               true|false (default = false)
+                  whether extra data copy is allowed to simplify read copy loop
+               fastest changing dimension in the new array layout
+                 = -1 (default) means no change in array layout
+                 = d  means contiguous array elements in the memory at
+                      d-th dimension
+               stride padding
+                 = 0 means keep the original data layout in all dimensions
+                 = 1 (default) means compressed array layout
+                 = d (d>=1) means accessing the fastest-changing-dimension
+                     in stride d, while other array dimensions are compressed
+               alignment padding (default = 4)
+                 = 1 means no alignment necessary 
+                 = d (d>1) means that the size of the fastest changing
+                     dimension is multiples of d
+                 = d (d<-1) means the size of the fastest changing
+                     dimension is coprime with |d|
+datacopy       [[stmt#,ref#1,ref#2,...],[...],...]
+                 array numbering follows accessing order, e.g.
+                 C[<2>]=C[<0>]*B[<1>]
+               level level
+               true|false
+               fastest changing dimension in the new array layout
+               stride padding
+               alignment padding
+                 ...see above...
+datacopy_privatized
+               stmt#
+               loop level
+               array name
+               [privatized loop levels]
+                  array footprint by assuming these loop levels fixed,
+                  the output code is only correct in parallel mode.
+               true|false
+               fastest changing dimension
+               stride padding
+               alignment padding
+                 ...see above...
+datacopy_privatized
+               [[stmt#,ref#1,ref#2,...],[...],...]
+               level level
+               [privatized loop levels]
+               true|false
+               fastest changing dimension in the new array layout
+               stride padding
+               alignment padding
+                 ...see above...
+nonsingular    [[vector],...,[vector]]
+                 matrix parameter describes a unimodular or nonunimodular
+                 transformation to be performed on the perfect loop nest,
+                 the only requirement for the matrix is invertible. each
+                 vector can be (n+1)-dimension where n is iteration space
+                 dimension. in the case, the last entry in the vector is
+                 interpreted as the constant shift factor.
+fuse            [set of statement numbers]
+                loop level
+distribute      [set of statement numbers]
+                loop level
+skew            [set of statement numbers]
+                loop level
+                [skewing amount vector]
+                  assuming targeted loop level is 2 and skewing vector is
+                  [1,1], then new loop at level 2 for statements in the first
+                parameter is mapped to L1+L2
+scale           [set of statement numbers]
+                loop level
+                scale amount
+                  shortcut to "skew([...],level,[0,..,0,amount])"
+reverse         [set of statement numbers]
+                loop level
+                  shortcut to "scale([...],level,-1)"
+shift           [set of statement numbers]
+                loop level
+                shift amount
+                  assuming targeted loop level is 2 and shift amount is
+                  1, then the new loop at level 2 for statements in the first
+                  parameter is mapped to L2+1, i.e. shifted right by 1
+shift_to        stmt#
+                loop level
+                absolute position
+                  shift the loop starting point to this position
+peel            stmt#
+                loop level
+                peel amount (default to 1)
+                  if positive, peel the specified number of iterations from the
+                start of the loop; if negative, peel from the end
+
+Miscellaneous commands:
+
+FORMAT               DESCRIPTION
+------------------   --------------------------
+source: <filename>   source file name
+format: <IR_name>    source file format (suif)
+procedure: <number>  intended procedure numer shown in source
+loop: <number>       intended loop number in specified procedure 
+loop: <number>-<number>
+                     range of loops treated in a single unified space 
+print dep            output data dependences
+print space          output current iteration space including those auxiliary
+                     loops determining the static loop structure
+print code           output C-like pseudo code
+print                shortcut to "print code"
+print <expr>         output result of expression
+stop                 stop script execution
+num_statement()      total number of statements, only allowed in expression
+remove_dep(<number>,<number>)
+                     remove all dependences from first statement to second
+                     
