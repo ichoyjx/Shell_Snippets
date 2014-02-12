@@ -13,3 +13,24 @@
    mm.modified.f
 
 4. use OpenUH to compile and execute the code and get the performance
+
+
+General Process
+
+# files that always need to keep still
+mm_main.f  -->  main test framework without the MM function
+mm_fun.f   -->  MM function only
+
+# TODO: generate temp.script for all the combinations
+./python suif.py mm_fun.f    -->   generate .sp2 file
+chill temp.script    -->   will use .sp2 file to generate .lxf file
+s2f mm_fun.lxf > mm_con.f
+
+
+
+
+cp mm_main.f mm.f
+cat mm_con.f >> mm.f   -->   concatenate to the file that'll be finally tested
+
+uhf90 -O3 mm.f
+./a.out
