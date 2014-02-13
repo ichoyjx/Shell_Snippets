@@ -14,6 +14,8 @@
 
       call cpu_time(finish)
       write (*,*) C(250,250)
+      open(1, file="mm_result", access="APPEND")
+      write (1,*) C(250,250)
       
       open(0, file="mm_time", access="APPEND")
       write (0, "(f15.12)") finish - start
