@@ -52,19 +52,31 @@ string getNewOrder (vector<int> loops) {
 }
 
 /* from generate scripts to mm.f, then compile and get result */
-void compile (int num, char *FILENAME) {
-  char command[64] = "uhf90 -O3 -o ./uhf90/";
-  char comma[4] = ".";
-  char space[4] = " ";
-  strcat(command, FILENAME);
-  strcat(command, comma);
-  char tmp_num[8];
-  itoa(num, tmp_num);
-  strcat(command, tmp_num);
-  strcat(command, space);
-  strcat(command, FILENAME);
+void process (string order, int unroll, int tile) {
+  system("make clean");
 
-  system(command);
+  char scripts_args[64] = "./generate_script.sh ";
+  char space[4] = " ";
+  strcat(scripts_args, order.c_str());
+  strcat(scripts_args, space);
+
+  char tmp_unroll[8];
+  char tmp_tile[8];
+  itoa(unroll, tmp_unroll);
+  itoa(tile, tmp_tile);
+  strcat(scripts_args, tmp_unroll);
+  strcat(scripts_args, space);
+  strcat(scripts_args, tmp_tile);
+
+  // generate scripts
+  system(scripts_args);
+
+  // transform
+  system("./chill_runner.f.sh mm_fun");
+
+  // compile and execute
+  system("uhf90 -O3 -o mm mm.f");
+  system("./mm");
 }
 
 //////////////////////////////////////////////////
@@ -96,6 +108,7 @@ int main (int argc, char **argv) {
 	TFILE << "blocking=" << j << "\t\n";
 
 	//compile(global_counter, FILENAME);
+	process(tmp_neworder, i, j);
 	global_counter++;
 
       }
