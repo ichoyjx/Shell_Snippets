@@ -15,8 +15,9 @@
       call cpu_time(finish)
       write (*,*) C(250,250)
       
-      open(0, file="mm_new_time", access="APPEND")
+      open(0, file="mm_time", access="APPEND")
       write (0, "(f15.12)") finish - start
       
       end
 
+CCCCC MM test function will be placed below
