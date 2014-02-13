@@ -21,6 +21,4 @@ permute([$L1,$L2,$L3])
 unroll(0,1,$U1)
 tile(0,1,$T1)
 
-
-print
-" > mm.script;
+" > mm_fun.script;
