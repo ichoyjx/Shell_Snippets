@@ -11,7 +11,7 @@ U1=$4
 T1=$5
 
 echo "
-source: mm_fun.sp2
+source: jacobi_fun.sp2
 format: suif
 procedure: 0
 loop: 0
@@ -21,4 +21,4 @@ permute([$L1,$L2,$L3])
 tile(0,1,$T1)
 unroll(0,1,$U1)
 
-" > mm_fun.script;
+" > jacobi_fun.script;

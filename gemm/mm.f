@@ -40,31 +40,76 @@ CCCCC MM test function will be placed below
       CUB2 = N
       OVER1 = 0
       IF (1 .LE. N) THEN
-      OVER1 = MOD(N, 8)
+      OVER1 = MOD(-(-(5 + N)) / 6, 8)
       END IF
-      DO 2, T2 = 1, N - OVER1, 6
-      DO 4, T4 = T2 + MOD(1 - T2, 8), MIN0(T2 + 4, N - OVER1), 8
+      DO 2, T2 = 1, -6 * OVER1 + N, 48
+      DO 4, T4 = T2, MIN0(N, T2 + 5), 1
       DO 6, T6 = 1, N, 1
       DO 8, T8 = 1, N, 1
       C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
-      C(T4 + 1, T8) = C(T4 + 1, T8) + A(T4 + 1, T6) * B(T6, T8)
-      C(T4 + 2, T8) = C(T4 + 2, T8) + A(T4 + 2, T6) * B(T6, T8)
-      C(T4 + 3, T8) = C(T4 + 3, T8) + A(T4 + 3, T6) * B(T6, T8)
-      C(T4 + 4, T8) = C(T4 + 4, T8) + A(T4 + 4, T6) * B(T6, T8)
-      C(T4 + 5, T8) = C(T4 + 5, T8) + A(T4 + 5, T6) * B(T6, T8)
-      C(T4 + 6, T8) = C(T4 + 6, T8) + A(T4 + 6, T6) * B(T6, T8)
-      C(T4 + 7, T8) = C(T4 + 7, T8) + A(T4 + 7, T6) * B(T6, T8)
     8 CONTINUE
     6 CONTINUE
     4 CONTINUE
-    2 CONTINUE
-      DO 10, T2 = MAX0(1, N - OVER1 + 1), N, 1
-      DO 12, T4 = 1, N, 1
-      DO 14, T6 = 1, N, 1
-      C(T2, T6) = C(T2, T6) + A(T2, T4) * B(T4, T6)
+      DO 10, T4 = T2 + 6, MIN0(N, T2 + 11), 1
+      DO 12, T6 = 1, N, 1
+      DO 14, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
    14 CONTINUE
    12 CONTINUE
    10 CONTINUE
+      DO 16, T4 = T2 + 12, MIN0(N, T2 + 17), 1
+      DO 18, T6 = 1, N, 1
+      DO 20, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
+   20 CONTINUE
+   18 CONTINUE
+   16 CONTINUE
+      DO 22, T4 = T2 + 18, MIN0(N, T2 + 23), 1
+      DO 24, T6 = 1, N, 1
+      DO 26, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
+   26 CONTINUE
+   24 CONTINUE
+   22 CONTINUE
+      DO 28, T4 = T2 + 24, MIN0(N, T2 + 29), 1
+      DO 30, T6 = 1, N, 1
+      DO 32, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
+   32 CONTINUE
+   30 CONTINUE
+   28 CONTINUE
+      DO 34, T4 = T2 + 30, MIN0(N, T2 + 35), 1
+      DO 36, T6 = 1, N, 1
+      DO 38, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
+   38 CONTINUE
+   36 CONTINUE
+   34 CONTINUE
+      DO 40, T4 = T2 + 36, MIN0(N, T2 + 41), 1
+      DO 42, T6 = 1, N, 1
+      DO 44, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
+   44 CONTINUE
+   42 CONTINUE
+   40 CONTINUE
+      DO 46, T4 = T2 + 42, MIN0(N, T2 + 47), 1
+      DO 48, T6 = 1, N, 1
+      DO 50, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
+   50 CONTINUE
+   48 CONTINUE
+   46 CONTINUE
+    2 CONTINUE
+      DO 52, T2 = MAX0(1, N - 6 * OVER1 + 1 + MOD(1 - (N - 6 * OVER1 +
+     $ 1), 6)), N, 6
+      DO 54, T4 = T2, MIN0(T2 + 5, N), 1
+      DO 56, T6 = 1, N, 1
+      DO 58, T8 = 1, N, 1
+      C(T4, T8) = C(T4, T8) + A(T4, T6) * B(T6, T8)
+   58 CONTINUE
+   56 CONTINUE
+   54 CONTINUE
+   52 CONTINUE
       MM = 0
       RETURN
 

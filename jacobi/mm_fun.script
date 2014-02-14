@@ -1,5 +1,5 @@
 
-source: mm_fun.sp2
+source: jacobi_fun.sp2
 format: suif
 procedure: 0
 loop: 0
