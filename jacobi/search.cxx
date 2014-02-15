@@ -8,9 +8,12 @@
 #include <fstream>
 #include <vector>
 
-#define LOOP_LEVEL 3
-
 using namespace std;
+
+void instr () {
+  printf("Usage: ./a.out loop-level\n");
+  exit(0);
+}
 
 void itoa (int num, char * ch) {
   int i=0, j;
@@ -81,6 +84,14 @@ void process (string order, int unroll, int tile) {
 
 //////////////////////////////////////////////////
 int main (int argc, char **argv) {
+  if (argc != 2) {
+    instr();
+  }
+
+  char *loop_level_input = NULL;
+  loop_level_input = strdup (argv[1]);
+  int LOOP_LEVEL = atoi(loop_level_input);
+
   vector<int> loops; // for STL next_permutation
   for (int i=0; i<LOOP_LEVEL; i++) {
     loops.push_back(i+1); // CHiLL loop level starts from 1
