@@ -16,7 +16,7 @@
       call cpu_time(finish)
       write (*,*) A(250,250)
       open(1, file="jacobi_result", access="APPEND")
-      write (1,*) C(250,250)
+      write (1,*) A(250,250)
 
       open(0, file="jacobi_time", access="APPEND")
       write (0, "(f25.20)") finish - start

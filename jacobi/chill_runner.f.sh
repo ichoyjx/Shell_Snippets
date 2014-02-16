@@ -6,5 +6,9 @@ porky -dead-code ${1}.sp1 ${1}.sp2
 chill ${1}.script
 s2f ${1}.lxf > jacobi_con.f
 sed -i "s/+\s-/-/" jacobi_con.f
+sed -i "s/+\s-/-/" jacobi_con.f
+sed -i "s/+\s-/-/" jacobi_con.f
+sed -i "s/+\s-/-/" jacobi_con.f
+sed -i "s/+\s-/-/" jacobi_con.f
 cp jacobi_main.f jacobi.f
 cat jacobi_con.f >> jacobi.f
