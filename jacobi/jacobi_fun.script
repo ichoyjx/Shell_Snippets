@@ -4,9 +4,9 @@ format: suif
 procedure: 0
 loop: 0
 
-permute([3,2,1])
+permute([1,2])
 
-tile(0,1,6)
-unroll(0,1,8)
+tile(0,1,)
+unroll(0,1,1)
 
 

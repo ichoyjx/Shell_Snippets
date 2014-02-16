@@ -10,7 +10,7 @@
 
 3. suif.py or shell script to compile and get the transformed code
 
-   mm.modified.f
+   jacobi.modified.f
 
 4. use OpenUH to compile and execute the code and get the performance
 
@@ -18,19 +18,19 @@
 General Process
 
 # files that always need to keep still
-mm_main.f  -->  main test framework without the MM function
-mm_fun.f   -->  MM function only
+jacobi_main.f  -->  main test framework without the JACOBI function
+jacobi_fun.f   -->  JACOBI function only
 
 # TODO: generate temp.script for all the combinations
-./python suif.py mm_fun.f    -->   generate .sp2 file
+./python suif.py jacobi_fun.f    -->   generate .sp2 file
 chill temp.script    -->   will use .sp2 file to generate .lxf file
-s2f mm_fun.lxf > mm_con.f
+s2f jacobi_fun.lxf > jacobi_con.f
 
 
 
 
-cp mm_main.f mm.f
-cat mm_con.f >> mm.f   -->   concatenate to the file that'll be finally tested
+cp jacobi_main.f jacobi.f
+cat jacobi_con.f >> jacobi.f   -->   concatenate to the file that'll be finally tested
 
-uhf90 -O3 mm.f
+uhf90 -O3 jacobi.f
 ./a.out
