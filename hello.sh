@@ -37,3 +37,9 @@ for i in 1 2 3 "hello" 5
 do
   echo $i
 done
+
+############################################
+# Makefile wildcard
+SRC_FILES := $(foreach DIR, $(SRC_DIR), $(wildcard $(SRC_DIR)/*.c))
+OBJS := $(patsubst %.c, %.o, $(SRC_FILES))
+TARGETLIST := $(patsubst %.c, %, $(SRC_FILES))
