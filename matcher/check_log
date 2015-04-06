@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# TODO: bug for runtest
+sed -i "s/'\"/' /g" $1
+sed -i "s/\"'/'/g" $1
+
+# content of command
+awk 'BEGIN{RS="]";FS="["}NF>1{print $NF}' $1 > $1.tmp
+
+while read line
+do
+    commd=(${line//", "/ })
+
+    # unify the runtest binary
+    commd[0]="'RUNTEST'"
+    echo ${commd[@]}
+    echo
+done < $1.tmp
