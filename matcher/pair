@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+cat $1 | awk '
+  { line[NR] = $0; s = start[$3] }
+  $2=="End" && s {
+      matched[s] = 1; matched[NR] = 1; start[$3] = link[s]
+  }
+  $2=="Start" {
+      if (s) link[end[$3]] = NR; else start[$3] = NR;             
+      end[$3] = NR;
+  }    
+  END {
+      for (i = 1; i <= NR; ++i)
+          printf "%s (%spaired)\n", line[i], matched[i] ? "" : "un"
+  }'
